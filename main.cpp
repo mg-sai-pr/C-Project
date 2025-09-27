@@ -74,12 +74,21 @@ int main() {
     vector<Transaction> transactions = loadTransactions("transactions.mgsai");
     int choice;
 
+    int monthlyIncome = 0;
+    int balance = 0;
+    // Calculate initial balance (will be updated after setting income)
+    for (const auto &t : transactions) {
+        balance -= t.amount;
+    }
+
     while (true) {
         cout << "\nHELLO TO THE TRANSACTION MANAGER\n";
         cout << "--------------------------------\n";
-        cout << "1. CREATE A TRANSACTION\n";
-        cout << "2. VIEW TRANSACTIONS\n";
-        cout << "3. EXIT\n";
+        cout << "1. Set Monthly Income\n";
+        cout << "2. CREATE A TRANSACTION\n";
+        cout << "3. VIEW TRANSACTIONS\n";
+        cout << "4. Check Balance\n";
+        cout << "5. EXIT\n";
         cout << "Choice: ";
         cin >> choice;
 
@@ -91,20 +100,68 @@ int main() {
         }
 
         if (choice == 1) {
+            cout << "PLEASE INPUT THE MONTHLY INCOME\n";
+            while (true) {
+                cin >> monthlyIncome;
+                if (cin.fail() || monthlyIncome < 0) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input. Please enter a positive number for income.\n";
+                } else {
+                    break;
+                }
+            }
+            // Recalculate balance
+            balance = monthlyIncome;
+            for (const auto &t : transactions) {
+                balance -= t.amount;
+            }
+            cout << "Monthly income set to: " << monthlyIncome << ".\n";
+
+        } else if (choice == 2) {
             Transaction t;
             cout << "\nCREATE A TRANSACTION\n";
             cout << "---------------------\n";
             cout << "Transaction Name: "; cin >> t.name;
-            cout << "Amount: "; cin >> t.amount;
-            cout << "Date (DD MM YYYY): "; cin >> t.date.day >> t.date.month >> t.date.year;
+            cout << "Amount: ";
+            while (true) {
+                cin >> t.amount;
+                if (cin.fail() || t.amount <= 0) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid amount. Please enter a positive number.\nAmount: ";
+                } else if (t.amount > balance) {
+                    cout << "Insufficient balance. You cannot make this transaction.\n";
+                    t.amount = 0;
+                    break;
+                } else {
+                    break;
+                }
+            }
+            if (t.amount == 0) continue;
+
+            // Date input validation
+            while (true) {
+                cout << "Date (DD MM YYYY): ";
+                cin >> t.date.day >> t.date.month >> t.date.year;
+                if (cin.fail() || t.date.day < 1 || t.date.day > 31 || t.date.month < 1 || t.date.month > 12 || t.date.year < 1900 || t.date.year > 2100) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid date. Please enter a valid date (DD MM YYYY).\n";
+                } else {
+                    break;
+                }
+            }
+
             cout << "Category: "; cin >> t.category;
 
             transactions.push_back(t);
             saveTransactions(transactions, "transactions.mgsai");
+            balance -= t.amount;
 
             cout << "\nTransaction Saved!\n";
 
-        } else if (choice == 2) {
+        } else if (choice == 3) {
             if (transactions.empty()) {
                 cout << "\nNo transactions found.\n";
             } else {
@@ -115,7 +172,13 @@ int main() {
                 }
             }
 
-        } else if (choice == 3) {
+        } else if (choice == 4) {
+            cout << "YOUR CURRENT BALANCE IS: " << balance << endl;
+            cout << "Press Enter to continue...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear leftover input
+            cin.get();
+        
+        } else if (choice == 5) {
             cout << "Exiting...\n";
             break;
         } else {
