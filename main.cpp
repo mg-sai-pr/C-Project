@@ -83,6 +83,13 @@ int main() {
         cout << "Choice: ";
         cin >> choice;
 
+        if (cin.fail()) {
+            cin.clear(); // clear error state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard invalid input
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
         if (choice == 1) {
             Transaction t;
             cout << "\nCREATE A TRANSACTION\n";
