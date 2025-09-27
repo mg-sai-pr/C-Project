@@ -71,7 +71,7 @@ vector<Transaction> loadTransactions(const string &filename) {
 
 // -------------------- Main Program --------------------
 int main() {
-    vector<Transaction> transactions = loadTransactions("transactions.dat");
+    vector<Transaction> transactions = loadTransactions("transactions.mgsai");
     int choice;
 
     while (true) {
@@ -93,7 +93,7 @@ int main() {
             cout << "Category: "; cin >> t.category;
 
             transactions.push_back(t);
-            saveTransactions(transactions, "transactions.dat");
+            saveTransactions(transactions, "transactions.mgsai");
 
             cout << "\nTransaction Saved!\n";
 
