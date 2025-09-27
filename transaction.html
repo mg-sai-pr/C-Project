@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Personal Finance Manager</title>
+  <link rel="stylesheet" href="a.css">
+</head>
+<body>
+  <header>
+    <h1>💰 Personal Finance Manager</h1>
+  </header>
+
+  <main>
+    <!-- Transaction Form -->
+    <section id="form-section">
+      <h2>Add Transaction</h2>
+      <form id="transaction-form">
+        <input type="text" id="desc" placeholder="Description" required>
+        <input type="number" id="amount" placeholder="Amount" required>
+        <select id="type">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <select id="category">
+          <option value="food">Food</option>
+          <option value="transport">Transport</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="date" id="date" required>
+        <button type="submit">Add</button>
+      </form>
+    </section>
+
+    <!-- Transactions -->
+    <section id="transactions-section">
+      <h2>Transactions</h2>
+      <ul id="transaction-list"></ul>
+    </section>
+
+    <!-- Summary -->
+    <section id="summary-section">
+      <h2>Summary</h2>
+      <p id="income">Income: $0</p>
+      <p id="expenses">Expenses: $0</p>
+      <p id="balance">Balance: $0</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
